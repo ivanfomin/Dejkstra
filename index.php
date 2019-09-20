@@ -5,6 +5,7 @@ $data = json_decode(file_get_contents(__DIR__ . '/graph.json'));
 //находит узел с наменьшей ценой
 function find_lowest_cost_node(array $node)
 {
+    echo $count;
     $lowest_cost = INF;
     $lowest_cost_node = null;
     foreach ($node as $key => $value) {
@@ -52,6 +53,8 @@ $costs[] = INF;
 $nodes[] = null;
 $processed[1] = true;
 
+//кол-во вызовов ф-ции нахождения узла с наименьшим ребром
+$count = 1;
 $node = find_lowest_cost_node($nodes[1]);
 
 while ($node !== null) {
@@ -84,6 +87,7 @@ while ($node !== null) {
     $processed[$node] = true;
 // ищем следыущей узел с мимимальной стоимостью
     $node = find_lowest_cost_node($neighbors);
+    $count++;
 }
 
 $steps = steps(count($nodes), $parents);
@@ -95,3 +99,5 @@ array_shift($steps);
 print_r($costs);
 //кол-во шагов от перового узла до последнего
 print_r($steps);
+//кол-во обращений
+echo $count; //в данном случае 16
