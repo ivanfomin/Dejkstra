@@ -5,7 +5,6 @@ $data = json_decode(file_get_contents(__DIR__ . '/graph.json'));
 //находит узел с наменьшей ценой
 function find_lowest_cost_node(array $node)
 {
-    echo $count;
     $lowest_cost = INF;
     $lowest_cost_node = null;
     foreach ($node as $key => $value) {
@@ -27,6 +26,10 @@ function steps(int $number, array $parents): array
         $steps[] = $parents[$number];
         $number = $parents[$number];
     }
+    $steps = array_reverse($steps);
+    //первый элемент будет null, поэтому удаляем
+
+    array_shift($steps);
 
     return $steps;
 }
@@ -93,11 +96,25 @@ while ($node !== null) {
 $steps = steps(count($nodes), $parents);
 
 $steps = array_reverse($steps);
-//первый элемент будет null, поэтому удаляем
-array_shift($steps);
-//стоимость каждого узла
-print_r($costs);
-//кол-во шагов от перового узла до последнего
-print_r($steps);
+
 //кол-во обращений
 echo $count; //в данном случае 16
+
+//кол-во узлов
+$counts = count($nodes);
+
+//список узлов, до каждого узла
+$allSteps = [];
+$allSteps[1] = steps($counts, $parents);
+
+while ($counts > 0) {
+    $counts--;
+
+    $allSteps[] = steps($counts, $parents);
+}
+
+$allSteps = array_reverse($allSteps);
+
+foreach ($costs as $key => $value) {
+    echo 'Узел ' . $key .' Стоиомсть ' . $value . ' Шаги ->' . implode(' : ', $allSteps[$key]) . "\n";
+}
